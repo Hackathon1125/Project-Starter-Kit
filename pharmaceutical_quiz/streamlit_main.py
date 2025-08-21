@@ -6,7 +6,7 @@ Main entry point for the modern web-based quiz application.
 import streamlit as st
 import sys
 import os
-from streamlit_option_menu import option_menu
+# Removed streamlit_option_menu dependency - using native Streamlit components
 import time
 
 # Add the project root to the Python path
@@ -69,37 +69,32 @@ def main():
     page_to_index = {"Input": 0, "Quiz": 1, "Results": 2}
     current_index = page_to_index.get(st.session_state.current_page, 0)
     
-    # Main navigation
-    selected = option_menu(
-        menu_title=None,
-        options=["Input", "Quiz", "Results"],
-        icons=["pencil-square", "question-circle", "bar-chart"],
-        menu_icon="cast",
-        default_index=current_index,
-        orientation="horizontal",
-        key="main_menu",
-        styles={
-            "container": {"padding": "0!important", "background-color": "#fafafa"},
-            "icon": {"color": "#1f4e79", "font-size": "18px"},
-            "nav-link": {
-                "font-size": "16px",
-                "text-align": "center",
-                "margin": "0px",
-                "--hover-color": "#eee"
-            },
-            "nav-link-selected": {"background-color": "#1f4e79"},
-        }
-    )
+    # Main navigation using native Streamlit tabs
+    tab1, tab2, tab3 = st.tabs(["📝 Input", "❓ Quiz", "📊 Results"])
     
-    st.session_state.current_page = selected
+    # Determine which tab to show based on session state
+    if st.session_state.current_page == "Input":
+        selected = "Input"
+        with tab1:
+            render_input_page()
+    elif st.session_state.current_page == "Quiz":
+        selected = "Quiz"
+        with tab2:
+            render_quiz_page()
+    elif st.session_state.current_page == "Results":
+        selected = "Results"
+        with tab3:
+            render_results_page()
+    else:
+        selected = "Input"
+        with tab1:
+            render_input_page()
     
-    # Route to appropriate page
-    if selected == "Input":
-        render_input_page()
-    elif selected == "Quiz":
-        render_quiz_page()
-    elif selected == "Results":
-        render_results_page()
+    # Handle tab switching
+    if 'last_tab_state' not in st.session_state:
+        st.session_state.last_tab_state = selected
+    
+    # Tab content is already rendered above in the with statements
 
 
 def render_input_page():
