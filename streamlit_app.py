@@ -12,7 +12,7 @@ pharmaceutical_quiz_dir = os.path.join(current_dir, 'pharmaceutical_quiz')
 sys.path.insert(0, pharmaceutical_quiz_dir)
 
 # Import and run the main Streamlit app
-from streamlit_main import main
+from pharmaceutical_quiz.streamlit_main import main
 
 if __name__ == "__main__":
     main()
